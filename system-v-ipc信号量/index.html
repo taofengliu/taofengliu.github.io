@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>System V IPC信号量 - 刘陶峰的博客</title><meta name="Description" content="System V IPC信号量"><meta property="og:title" content="System V IPC信号量" />
+<meta property="og:description" content="System V IPC信号量" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://singerpigman.github.io/system-v-ipc%E4%BF%A1%E5%8F%B7%E9%87%8F/" /><meta property="og:image" content="https://singerpigman.github.io/logo.svg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-11-02T23:53:25+08:00" />
+<meta property="article:modified_time" content="2021-11-02T23:53:25+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://singerpigman.github.io/logo.svg"/>
+
+<meta name="twitter:title" content="System V IPC信号量"/>
+<meta name="twitter:description" content="System V IPC信号量"/>
+<meta name="application-name" content="刘陶峰的博客">
+<meta name="apple-mobile-web-app-title" content="刘陶峰的博客"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/logo.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://singerpigman.github.io/system-v-ipc%E4%BF%A1%E5%8F%B7%E9%87%8F/" /><link rel="next" href="https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "System V IPC信号量",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/singerpigman.github.io\/system-v-ipc%E4%BF%A1%E5%8F%B7%E9%87%8F\/"
+        },"genre": "posts","keywords": "Linux内核","wordcount":  1926 ,
+        "url": "https:\/\/singerpigman.github.io\/system-v-ipc%E4%BF%A1%E5%8F%B7%E9%87%8F\/","datePublished": "2021-11-02T23:53:25+08:00","dateModified": "2021-11-02T23:53:25+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "刘陶峰"
+            },"description": "System V IPC信号量"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="刘陶峰的博客">刘陶峰的博客</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于我 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="刘陶峰的博客">刘陶峰的博客</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于我</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">System V IPC信号量</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>刘陶峰</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/os/"><i class="far fa-folder fa-fw"></i>操作系统</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-02">2021-11-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1926 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#什么是ipc信号量">什么是IPC信号量？</a></li>
+    <li><a href="#如何使用ipc信号量">如何使用IPC信号量</a></li>
+    <li><a href="#数据结构">数据结构</a></li>
+    <li><a href="#实现系统调用">实现系统调用</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>  因我一度混淆IPC信号量与内核同步机制信号量，在此总结IPC信号量，加以区分</p>
+<blockquote>
+<h2 id="什么是ipc信号量">什么是IPC信号量？</h2>
+</blockquote>
+<p>  这里注意与<strong>内核同步机制中的信号量</strong>区分<br>
+  二者均为计数器，为多个进程共享的数据结构提供受控访问。但是IPC信号量比内核同步机制中的信号量更为复杂，主要区别有下:</p>
+<ul>
+<li>每个IPC信号量是一个或多个信号量值的集合，而不像内核信号量只有一个值，当然可以请求只有一个信号量的信号量集合，并定义函数模拟内核信号量的简单操作</li>
+<li>IPC信号量提供一种失效安全机制，用于在进程死亡前自动恢复其控制的信号量</li>
+</ul>
+<blockquote>
+<h2 id="如何使用ipc信号量">如何使用IPC信号量</h2>
+</blockquote>
+<p>  这里给出一段《深入Linux内核架构》的代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="cp">#include</span><span class="cpf">&lt;stdio.h&gt; </span><span class="cp">
+</span><span class="cp">#include</span><span class="cpf">&lt;sys/types.h&gt; </span><span class="cp">
+</span><span class="cp">#include</span><span class="cpf">&lt;sys/ipc.h&gt; </span><span class="cp">
+</span><span class="cp">#include</span><span class="cpf">&lt;sys/sem.h&gt;</span><span class="cp">
+</span><span class="cp">#define SEMKEY 1234L </span><span class="cm">/* 标识符 */</span><span class="cp"> 
+</span><span class="cp">#define PERMS 0666 </span><span class="cm">/* 访问权限： rwrwrw */</span><span class="cp"> 
+</span><span class="cp"></span>
+<span class="k">struct</span> <span class="n">sembuf</span> <span class="n">op_down</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">,</span> <span class="mi">0</span> <span class="p">};</span> 
+<span class="k">struct</span> <span class="n">sembuf</span> <span class="n">op_up</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">,</span> <span class="mi">0</span> <span class="p">};</span> 
+<span class="kt">int</span> <span class="n">semid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="cm">/* 信号量 ID */</span> 
+<span class="kt">int</span> <span class="n">res</span><span class="p">;</span> <span class="cm">/* 信号量操作的结果 */</span> 
+<span class="kt">void</span> <span class="nf">init_sem</span><span class="p">()</span> <span class="p">{</span> 
+    <span class="cm">/* 测试信号量是否已经存在 */</span> 
+    <span class="n">semid</span> <span class="o">=</span> <span class="n">semget</span><span class="p">(</span><span class="n">SEMKEY</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">IPC_CREAT</span> <span class="o">|</span> <span class="n">PERMS</span><span class="p">);</span> 
+    <span class="k">if</span> <span class="p">(</span><span class="n">semid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> 
+        <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Create the semaphore</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span> 
+        <span class="n">semid</span> <span class="o">=</span> <span class="n">semget</span><span class="p">(</span><span class="n">SEMKEY</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">IPC_CREAT</span> <span class="o">|</span> <span class="n">PERMS</span><span class="p">);</span> 
+        <span class="k">if</span> <span class="p">(</span><span class="n">semid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Couldn&#39;t create semaphore!</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span> 
+            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="cm">/* 初始化为1 */</span> 
+        <span class="n">res</span> <span class="o">=</span> <span class="n">semctl</span><span class="p">(</span><span class="n">semid</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SETVAL</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> 
+    <span class="p">}</span> 
+<span class="p">}</span> 
+<span class="kt">void</span> <span class="nf">down</span><span class="p">()</span> <span class="p">{</span> 
+    <span class="cm">/* 执行down操作 */</span> 
+    <span class="n">res</span> <span class="o">=</span> <span class="n">semop</span><span class="p">(</span><span class="n">semid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">op_down</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span> 
+<span class="p">}</span> 
+<span class="kt">void</span> <span class="nf">up</span><span class="p">()</span> <span class="p">{</span> 
+    <span class="cm">/* 执行up操作 */</span> 
+    <span class="n">res</span> <span class="o">=</span> <span class="n">semop</span><span class="p">(</span><span class="n">semid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">op_up</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span> 
+<span class="p">}</span> 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span> 
+    <span class="n">init_sem</span><span class="p">();</span> 
+    <span class="cm">/* 正常的程序代码 */</span> 
+    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;Before critical code</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span> 
+    <span class="n">down</span><span class="p">();</span> 
+    <span class="cm">/* 临界区代码 */</span> 
+    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;In critical code</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span> 
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> 
+    <span class="n">up</span><span class="p">();</span> 
+    <span class="cm">/* 其余代码 */</span> 
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> 
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<h2 id="数据结构">数据结构</h2>
+</blockquote>
+<p>  内核使用了几个数据结构来描述所有注册信号量的当前状态，并建立了一种网状结构。它们不仅负责管理信号量及其特征（值、读写权限，等等），还负责通过等待列表将信号量与等待进程关联起来。<br>
+  给定的进程属于task_struct-&gt;nsproxy-&gt;ipc_ns指向的命名空间，初始的默认命名空间通过ipc_namespace的静态实例init_ipc_ns实现。每个命名空间都包含如下信息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="o">&lt;</span><span class="n">ipc</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span> 
+<span class="k">struct</span> <span class="n">ipc_namespace</span> <span class="p">{</span> 
+    <span class="p">...</span>
+    <span class="k">struct</span> <span class="n">ipc_ids</span> <span class="o">*</span><span class="n">ids</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span> 
+    <span class="cm">/* 资源限制 */</span> 
+    <span class="p">...</span> 
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>  我省去了与监视资源消耗和设置资源限制相关的很多结构成员。举例来说，内核会限制共享内存页的最大数目、共享内存段的最大长度、消息队列的最大数目，等等。数组ids中每个数组元素对应于一种IPC机制：共享内存、信号量、消息队列。每个数组项指向一个struct ipc_ids的实例，该结构用于跟踪各类别现存的IPC对象。索引0对应的是信号量，其后是消息队列，最后是共享内存。<br>
+  struct ipc_ids定义如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="k">struct</span> <span class="n">ipc_ids</span> <span class="p">{</span> 
+    <span class="kt">int</span> <span class="n">in_use</span><span class="p">;</span> 
+    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">seq</span><span class="p">;</span> 
+    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">seq_max</span><span class="p">;</span> 
+    <span class="k">struct</span> <span class="n">rw_semaphore</span> <span class="n">rw_mutex</span><span class="p">;</span> 
+    <span class="k">struct</span> <span class="n">idr</span> <span class="n">ipcs_idr</span><span class="p">;</span> 
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>  前几个成员保存了有关IPC对象状态的一般信息:</p>
+<ul>
+<li>in_use保存了当前使用中IPC对象的数目</li>
+<li>seq和seq_max用于连续产生用户空间IPC ID。但要注意，ID不等同于序号。内核通过ID来标识IPC对象，ID按资源类型管理，即一个ID用于消息队列，一个用于信号量，一个用于共享内存对象。每次创建新的IPC对象时，序号加1（自动进行回绕，即到达最大值自动变为0）用户层可见的ID由s * SEQ_MULTIPLIER + i给出，其中s是当前序号，i是内核内部的ID。SEQ_MULTIPLIER设置为IPC对象的上限。如果重用了内部ID，仍然会产生不同的用户空间ID，因为序号不会重用。在用户层传递了一个陈旧的ID时，这种做法最小化了使用错误资源的风险</li>
+<li><em>rw_mutex是一个<strong>内核信号量</strong>。它用于实现信号量操作，避免用户空间中的竞态条件。该互斥量有效地保护了包含信号量值的数据结构</em></li>
+</ul>
+<p>  每个IPC对象都由kern_ipc_perm的一个实例表示，每个对象都有一个内核内部ID，ipcs_idr用于将ID关联到指向对应的kern_ipc_perm实例的指针。kern_ipc_perm的成员保存了有关信号量“所有者”和访问权限的有关信息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="o">&lt;</span><span class="n">ipc</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span> 
+<span class="k">struct</span> <span class="n">kern_ipc_perm</span> 
+<span class="p">{</span> 
+    <span class="kt">int</span> <span class="n">id</span><span class="p">;</span> 
+    <span class="n">key_t</span> <span class="n">key</span><span class="p">;</span> 
+    <span class="n">uid_t</span> <span class="n">uid</span><span class="p">;</span>
+    <span class="n">gid_t</span> <span class="n">gid</span><span class="p">;</span> 
+    <span class="n">uid_t</span> <span class="n">cuid</span><span class="p">;</span> 
+    <span class="n">gid_t</span> <span class="n">cgid</span><span class="p">;</span> 
+    <span class="n">mode_t</span> <span class="n">mode</span><span class="p">;</span> 
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">seq</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>  该结构不仅可用于信号量，还可以用于其他的IPC机制。其中主要字段说明如下:</p>
+<ul>
+<li>key保存了用户程序用来标识信号量的魔数，id是内核内部的ID</li>
+<li>uid和gid分别指定了所有者的用户ID和组ID。cuid和cgid保存了产生信号量的进程的用户ID和组ID</li>
+<li>mode保存了位掩码，指定了所有者、组、其他用户的访问权限</li>
+</ul>
+<p>  上述数据结构不足以保存信号量所需的所有信息。各进程的task_struct实例中有一个与IPC相关的成员，主要用于撤销信号量。    <br>
+  sem_queue是另一个数据结构，用于将信号量与睡眠进程关联起来，该进程想要执行信号量操作，但目前不允许执行。其结构类似双端队列，在此不描述。<br>
+  总体来讲，IPC信号量的内核数据结构层次如下图：<br>
+<figure><a class="lightgallery" href="/posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC.jpg" title="IPC" data-thumbnail="/posts/SystemVIPC信号量/IPC.jpg" data-sub-html="<h2>ICP信号量结构层次</h2><p>IPC</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC.jpg"
+            data-srcset="/posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC.jpg, /posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC.jpg 1.5x, /posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC.jpg 2x"
+            data-sizes="auto"
+            alt="/posts/SystemVIPC信号量/IPC.jpg" />
+    </a><figcaption class="image-caption">ICP信号量结构层次</figcaption>
+    </figure></p>
+<blockquote>
+<h2 id="实现系统调用">实现系统调用</h2>
+</blockquote>
+<p>  所有对信号量的操作都使用一个名为ipc的系统调用执行。该调用不仅用于信号量，也用于操作消息队列和共享内存。其第一个参数用于将实际工作委托给其他函数。 <br>
+  总之一张图搞定:  <br>
+<figure><a class="lightgallery" href="/posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC2.jpg" title="IPC" data-thumbnail="/posts/SystemVIPC信号量/IPC2.jpg" data-sub-html="<h2>ICP信号量系统调用</h2><p>IPC</p>">
+        <img
+            class="lazyload"
+            src="/svg/loading.min.svg"
+            data-src="/posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC2.jpg"
+            data-srcset="/posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC2.jpg, /posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC2.jpg 1.5x, /posts/SystemVIPC%e4%bf%a1%e5%8f%b7%e9%87%8f/IPC2.jpg 2x"
+            data-sizes="auto"
+            alt="/posts/SystemVIPC信号量/IPC2.jpg" />
+    </a><figcaption class="image-caption">ICP信号量系统调用</figcaption>
+    </figure></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-11-02</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/linux%E5%86%85%E6%A0%B8/">Linux内核</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/innodb%E4%B8%AD%E7%9A%84%E9%94%81/" class="next" rel="next" title="InnoDB中的锁">InnoDB中的锁<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">刘陶峰</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
