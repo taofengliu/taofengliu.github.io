@@ -3,8 +3,8 @@
         <title>数据库 - 分类 - 刘陶峰的博客</title>
         <link>https://singerpigman.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
         <description>数据库 - 分类 - 刘陶峰的博客</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>taofeng_liu@outlook.com (刘陶峰)</managingEditor>
-            <webMaster>taofeng_liu@outlook.com (刘陶峰)</webMaster><lastBuildDate>Sun, 07 Nov 2021 00:05:35 &#43;0800</lastBuildDate><atom:link href="https://singerpigman.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>taofengliu@outlook.com (刘陶峰)</managingEditor>
+            <webMaster>taofengliu@outlook.com (刘陶峰)</webMaster><lastBuildDate>Sun, 07 Nov 2021 00:05:35 &#43;0800</lastBuildDate><atom:link href="https://singerpigman.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="self" type="application/rss+xml" /><item>
     <title>InnoDB中的锁</title>
     <link>https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/</link>
     <pubDate>Sun, 07 Nov 2021 00:05:35 &#43;0800</pubDate>
