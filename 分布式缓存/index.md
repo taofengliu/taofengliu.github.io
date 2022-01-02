@@ -4,14 +4,14 @@
 ### 基本信息
 &emsp;&emsp;项目地址：<https://github.com/taofengliu/cache>
 
-&emsp;&emsp;这是一个纯内存的缓存工具，节点用来存储具体数据，Router用来接受客户请求并路由到对应节点去查询数据。节点内部用LRU算法来管理数据，Router通过一致性哈希算法管理各个节点。Router启动时会对节点进行简单的测试，确认节点地址正确。Router有感知节点宕机的功能，当查询或设值的节点已经无法使用，Router会删除该节点。在设值时会自动反复重新尝试设值，若所有节点均失效，则Router关闭。
+&emsp;&emsp;这是一个纯内存的缓存~~玩具~~工具，节点用来存储具体数据，Router用来接受客户请求并路由到对应节点去查询数据。节点内部用LRU算法来管理数据，Router通过一致性哈希算法管理各个节点。Router启动时会对节点进行简单的测试，确认节点地址正确。Router有感知节点宕机的功能，当查询或设值的节点已经无法使用，Router会删除该节点。在设值时会自动反复重新尝试设值，若所有节点均失效，则Router关闭。
 
 &emsp;&emsp;项目的设计灵感来源于《数据密集型应用系统设计》第203页的方案2。
 ![项目结构](/posts/分布式缓存/struct.png "项目结构")
 
 ### 启动方法
 &emsp;&emsp;启动一个节点： 
-```run go run_nodeserver.go -端口号 -LRU容量```
+```run go run_nodeserver.go -端口号 -LRU容量(单位：字节)```
 
 &emsp;&emsp;启动一个Router：
 ```run go run_router.go 多个节点地址（以空格分隔） -端口号 -每个真实节点对应的虚拟节点数```
@@ -89,15 +89,15 @@ func (list *LinkedList) AddToHead(element *Element) {
 &emsp;&emsp;首先定义一个Cache结构，包含最大容量值、当前容量值、一个双向队列和一个HashMap，HashMap的作用是通过key值在O(1)复杂度内获得对应的队列元素，我还添加了一个回调函数用于测试。
 ```go
 type Cache struct {
-	maxCapacity int64 //最大容量
-	capacity    int64 //当前容量
+	maxCapacity int //最大容量
+	capacity    int //当前容量
 	list        *linkedlist.LinkedList
 	cache       map[string]*linkedlist.Element
 	OnEvicted   func(key string, value linkedlist.Data) //当一个element被删除时执行该方法
 }
 ```
 
-&emsp;&emsp;之后便是最重要的Get和Add方法。Get方法的实现思路就是根据key在HashMap中获得对应的队列元素，将元素移动到队首，然后返回元素中的数据。Add方法可以先调用Get方法判断该key值是否已经存在于队列中，如果已存在，Get方法已经将对应元素移至队首，只需更改对应的元素中的数据；如果不存在，则新建元素并加至队首。至此，LRU算法就已经完成。
+&emsp;&emsp;之后便是最重要的Get和Add方法。Get方法的实现思路就是根据key在HashMap中获得对应的队列元素，将元素移动到队首，然后返回元素中的数据。Add方法可以先调用Get方法判断该key值是否已经存在于队列中，如果已存在，Get方法已经将对应元素移至队首，只需更改对应的元素中的数据；如果不存在，则新建元素并加至队首。添加成功之后，还要判断LRU容量是否超出预设的最大值，若超出最大值，需要删除队尾元素直到容量小于等于预设的最大值。至此，LRU算法就已经完成。
 ```go
 func (c *Cache) Get(key string) (value linkedlist.Data, ok bool) {
 	if element, ok := c.cache[key]; ok {
@@ -120,11 +120,16 @@ func (c *Cache) Add(key string, value linkedlist.Data) {
 			Key:   key,
 			Value: value,
 		}
-		if c.capacity == c.maxCapacity {
+		c.list.AddToHead(&element)
+		c.cache[key] = &element
+		c.capacity += element.Value.Length()
+
+		//容量超过限度
+		for c.capacity > c.maxCapacity {
 			toRemove := c.list.Tail.Pre
 			c.list.Remove(toRemove)
 			delete(c.cache, toRemove.Key)
-			c.capacity--
+			c.capacity -= toRemove.Value.Length()
 
 			//执行回调方法
 			if c.OnEvicted != nil {
@@ -132,9 +137,6 @@ func (c *Cache) Add(key string, value linkedlist.Data) {
 			}
 
 		}
-		c.list.AddToHead(&element)
-		c.cache[key] = &element
-		c.capacity++
 	}
 }
 ```
@@ -166,7 +168,7 @@ func (c *Cache) Add(key string, value linkedlist.Data) {
 type Map struct {
 	hash     Hash           //Hash函数，我默认使用的是CRC32
 	replicas int            //虚拟节点的倍数，代表每个真实节点对应几个虚拟节点
-	Keys     []int          //经过排序，代表一个哈希环
+	Keys     []int          //经过排序，存储所有节点的哈希值
 	hashMap  map[int]string //虚拟节点和真实节点的映射，虚拟节点即为一个hash值，真实节点为一个地址
 }
 ```

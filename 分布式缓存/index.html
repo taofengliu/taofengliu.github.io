@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/singerpigman.github.io\/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98\/"
-        },"genre": "posts","keywords": "个人项目","wordcount":  2469 ,
+        },"genre": "posts","keywords": "个人项目","wordcount":  2552 ,
         "url": "https:\/\/singerpigman.github.io\/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98\/","datePublished": "2021-12-30T15:37:50+08:00","dateModified": "2021-12-30T15:37:50+08:00","publisher": {
             "@type": "Organization",
             "name": "刘陶峰","logo": "https:\/\/singerpigman.github.io\/avatar.png"},"author": {
@@ -104,8 +104,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">分布式缓存</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/about" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>刘陶峰</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"><i class="far fa-folder fa-fw"></i>分布式系统</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-12-30">2021-12-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2469 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-12-30">2021-12-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2552 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -139,7 +139,7 @@
 </blockquote>
 <h3 id="基本信息">基本信息</h3>
 <p>  项目地址：<a href="https://github.com/taofengliu/cache" target="_blank" rel="noopener noreffer">https://github.com/taofengliu/cache</a></p>
-<p>  这是一个纯内存的缓存工具，节点用来存储具体数据，Router用来接受客户请求并路由到对应节点去查询数据。节点内部用LRU算法来管理数据，Router通过一致性哈希算法管理各个节点。Router启动时会对节点进行简单的测试，确认节点地址正确。Router有感知节点宕机的功能，当查询或设值的节点已经无法使用，Router会删除该节点。在设值时会自动反复重新尝试设值，若所有节点均失效，则Router关闭。</p>
+<p>  这是一个纯内存的缓存<del>玩具</del>工具，节点用来存储具体数据，Router用来接受客户请求并路由到对应节点去查询数据。节点内部用LRU算法来管理数据，Router通过一致性哈希算法管理各个节点。Router启动时会对节点进行简单的测试，确认节点地址正确。Router有感知节点宕机的功能，当查询或设值的节点已经无法使用，Router会删除该节点。在设值时会自动反复重新尝试设值，若所有节点均失效，则Router关闭。</p>
 <p>  项目的设计灵感来源于《数据密集型应用系统设计》第203页的方案2。
 <figure><a class="lightgallery" href="/posts/%e5%88%86%e5%b8%83%e5%bc%8f%e7%bc%93%e5%ad%98/struct.png" title="项目结构" data-thumbnail="/posts/分布式缓存/struct.png" data-sub-html="<h2>项目结构</h2><p>项目结构</p>">
         <img
@@ -153,7 +153,7 @@
     </figure></p>
 <h3 id="启动方法">启动方法</h3>
 <p>  启动一个节点：
-<code>run go run_nodeserver.go -端口号 -LRU容量</code></p>
+<code>run go run_nodeserver.go -端口号 -LRU容量(单位：字节)</code></p>
 <p>  启动一个Router：
 <code>run go run_router.go 多个节点地址（以空格分隔） -端口号 -每个真实节点对应的虚拟节点数</code></p>
 <h3 id="http-api">HTTP API</h3>
@@ -295,15 +295,15 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Cache</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">maxCapacity</span> <span class="kt">int64</span> <span class="c1">//最大容量
-</span><span class="c1"></span>	<span class="nx">capacity</span>    <span class="kt">int64</span> <span class="c1">//当前容量
+	<span class="nx">maxCapacity</span> <span class="kt">int</span> <span class="c1">//最大容量
+</span><span class="c1"></span>	<span class="nx">capacity</span>    <span class="kt">int</span> <span class="c1">//当前容量
 </span><span class="c1"></span>	<span class="nx">list</span>        <span class="o">*</span><span class="nx">linkedlist</span><span class="p">.</span><span class="nx">LinkedList</span>
 	<span class="nx">cache</span>       <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">linkedlist</span><span class="p">.</span><span class="nx">Element</span>
 	<span class="nx">OnEvicted</span>   <span class="kd">func</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">value</span> <span class="nx">linkedlist</span><span class="p">.</span><span class="nx">Data</span><span class="p">)</span> <span class="c1">//当一个element被删除时执行该方法
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>  之后便是最重要的Get和Add方法。Get方法的实现思路就是根据key在HashMap中获得对应的队列元素，将元素移动到队首，然后返回元素中的数据。Add方法可以先调用Get方法判断该key值是否已经存在于队列中，如果已存在，Get方法已经将对应元素移至队首，只需更改对应的元素中的数据；如果不存在，则新建元素并加至队首。至此，LRU算法就已经完成。</p>
+</div><p>  之后便是最重要的Get和Add方法。Get方法的实现思路就是根据key在HashMap中获得对应的队列元素，将元素移动到队首，然后返回元素中的数据。Add方法可以先调用Get方法判断该key值是否已经存在于队列中，如果已存在，Get方法已经将对应元素移至队首，只需更改对应的元素中的数据；如果不存在，则新建元素并加至队首。添加成功之后，还要判断LRU容量是否超出预设的最大值，若超出最大值，需要删除队尾元素直到容量小于等于预设的最大值。至此，LRU算法就已经完成。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -344,6 +344,8 @@
 </span><span class="lnt">36
 </span><span class="lnt">37
 </span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">Cache</span><span class="p">)</span> <span class="nf">Get</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">value</span> <span class="nx">linkedlist</span><span class="p">.</span><span class="nx">Data</span><span class="p">,</span> <span class="nx">ok</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
@@ -367,11 +369,16 @@
 			<span class="nx">Key</span><span class="p">:</span>   <span class="nx">key</span><span class="p">,</span>
 			<span class="nx">Value</span><span class="p">:</span> <span class="nx">value</span><span class="p">,</span>
 		<span class="p">}</span>
-		<span class="k">if</span> <span class="nx">c</span><span class="p">.</span><span class="nx">capacity</span> <span class="o">==</span> <span class="nx">c</span><span class="p">.</span><span class="nx">maxCapacity</span> <span class="p">{</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nf">AddToHead</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">element</span><span class="p">)</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">cache</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">element</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">capacity</span> <span class="o">+=</span> <span class="nx">element</span><span class="p">.</span><span class="nx">Value</span><span class="p">.</span><span class="nf">Length</span><span class="p">()</span>
+
+		<span class="c1">//容量超过限度
+</span><span class="c1"></span>		<span class="k">for</span> <span class="nx">c</span><span class="p">.</span><span class="nx">capacity</span> <span class="p">&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="nx">maxCapacity</span> <span class="p">{</span>
 			<span class="nx">toRemove</span> <span class="o">:=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">Tail</span><span class="p">.</span><span class="nx">Pre</span>
 			<span class="nx">c</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="nx">toRemove</span><span class="p">)</span>
 			<span class="nb">delete</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span> <span class="nx">toRemove</span><span class="p">.</span><span class="nx">Key</span><span class="p">)</span>
-			<span class="nx">c</span><span class="p">.</span><span class="nx">capacity</span><span class="o">--</span>
+			<span class="nx">c</span><span class="p">.</span><span class="nx">capacity</span> <span class="o">-=</span> <span class="nx">toRemove</span><span class="p">.</span><span class="nx">Value</span><span class="p">.</span><span class="nf">Length</span><span class="p">()</span>
 
 			<span class="c1">//执行回调方法
 </span><span class="c1"></span>			<span class="k">if</span> <span class="nx">c</span><span class="p">.</span><span class="nx">OnEvicted</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
@@ -379,9 +386,6 @@
 			<span class="p">}</span>
 
 		<span class="p">}</span>
-		<span class="nx">c</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nf">AddToHead</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">element</span><span class="p">)</span>
-		<span class="nx">c</span><span class="p">.</span><span class="nx">cache</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">element</span>
-		<span class="nx">c</span><span class="p">.</span><span class="nx">capacity</span><span class="o">++</span>
 	<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -414,7 +418,7 @@
 <pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Map</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">hash</span>     <span class="nx">Hash</span>           <span class="c1">//Hash函数，我默认使用的是CRC32
 </span><span class="c1"></span>	<span class="nx">replicas</span> <span class="kt">int</span>            <span class="c1">//虚拟节点的倍数，代表每个真实节点对应几个虚拟节点
-</span><span class="c1"></span>	<span class="nx">Keys</span>     <span class="p">[]</span><span class="kt">int</span>          <span class="c1">//经过排序，代表一个哈希环
+</span><span class="c1"></span>	<span class="nx">Keys</span>     <span class="p">[]</span><span class="kt">int</span>          <span class="c1">//经过排序，存储所有节点的哈希值
 </span><span class="c1"></span>	<span class="nx">hashMap</span>  <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span> <span class="c1">//虚拟节点和真实节点的映射，虚拟节点即为一个hash值，真实节点为一个地址
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
