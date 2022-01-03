@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Linux块设备I/O-总览"/>
 <meta name="twitter:description" content="Linux块设备I/O-总览"/>
 <meta name="application-name" content="刘陶峰的博客">
-<meta name="apple-mobile-web-app-title" content="刘陶峰的博客"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/logo.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/" /><link rel="prev" href="https://singerpigman.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+<meta name="apple-mobile-web-app-title" content="刘陶峰的博客"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/logo.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/" /><link rel="prev" href="https://singerpigman.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" /><link rel="next" href="https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -140,7 +140,7 @@
 <h2 id="块设备">块设备</h2>
 </blockquote>
 <p>  系统中能够随机（不需要按顺序）访问固定大小数据片的硬件设备叫做块设备，这些固定大小的数据片就叫做块。最常见的块设备就是硬盘了。另一种常见的设备类型是字符设备。字符设备按照字符流的方式被有序访问，像键盘就是最常见的字符设备。</p>
-<p>  对于这两种设备，最重要的区别就是“是否可以随机访问”。举个例子，键盘这种设备提供的就是一个数据流，当我们输入“wolf”这个字符串时，键盘驱动程序会按照和输入完全相同的顺序返回这个由四个字符组成的数据流，对键盘的读操作会得到这个数据流，首先从数据流中读取字符“w”,之后时“o”，再接着就是“l”和“f”。当没有人敲键盘时，数据流就是空的。硬盘等块设备就明显不同，我们可以读取硬盘上的任意块的内容，他们的位置不需要连续，而且没有时间上的绝对顺序要求，可以认为硬盘时被随机访问，因此他是一个块设备。</p>
+<p>  对于这两种设备，最重要的区别就是“是否可以随机访问”。举个例子，键盘这种设备提供的就是一个数据流，当我们输入“wolf”这个字符串时，键盘驱动程序会按照和输入完全相同的顺序返回这个由四个字符组成的数据流，对键盘的读操作会得到这个数据流，首先从数据流中读取字符“w”,之后时“o”，再接着就是“l”和“f”。当没有人敲键盘时，数据流就是空的。硬盘等块设备就明显不同，我们可以读取硬盘上的任意块的内容，它们的位置不需要连续，而且没有时间上的绝对顺序要求，可以认为硬盘时被随机访问，因此它是一个块设备。</p>
 <blockquote>
 <h2 id="块设备io流程">块设备I/O流程</h2>
 </blockquote>
@@ -195,7 +195,8 @@
         </section>
     </div>
 
-    <div class="post-nav"><a href="/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" class="prev" rel="prev" title="分布式缓存"><i class="fas fa-angle-left fa-fw"></i>分布式缓存</a></div>
+    <div class="post-nav"><a href="/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" class="prev" rel="prev" title="分布式缓存"><i class="fas fa-angle-left fa-fw"></i>分布式缓存</a>
+            <a href="/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" class="next" rel="next" title="Linux块设备I/O-虚拟文件系统">Linux块设备I/O-虚拟文件系统<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 </article></div>
             </main><footer class="footer">
