@@ -21,6 +21,8 @@
 
 &emsp;&emsp;POST {Router地址}/cache/{key值}&emsp;&emsp;来进行设值，值通过http body发送
 
+&emsp;&emsp;DELETE {Router地址}/cache/{key值}&emsp;&emsp;来进行删值
+
 > ## LRU算法
 ### 双向队列
 &emsp;&emsp;双向队列就是真正存储每个LRU元素的地方，它有长度限制，如果达到长度上限，那么再添加元素时队列末端的元素就会被挤出队列，每当插入或查询一个元素，它总会被放到队首。
