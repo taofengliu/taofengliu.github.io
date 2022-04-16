@@ -27,7 +27,7 @@
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https:\/\/singerpigman.github.io\/cmu445\/"
-        },"genre": "posts","keywords": "CMU-15-445, 个人项目","wordcount":  949 ,
+        },"genre": "posts","keywords": "CMU-15-445, 个人项目","wordcount":  2507 ,
         "url": "https:\/\/singerpigman.github.io\/cmu445\/","datePublished": "2022-04-14T10:28:30+08:00","dateModified": "2022-04-14T10:28:30+08:00","publisher": {
             "@type": "Organization",
             "name": "刘陶峰","logo": "https:\/\/singerpigman.github.io\/avatar.png"},"author": {
@@ -104,8 +104,8 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">CMU-15-445</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/about" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>刘陶峰</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"><i class="far fa-folder fa-fw"></i>数据库</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-04-14">2022-04-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 949 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2022-04-14">2022-04-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2507 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
                     <span>目录</span>
@@ -118,6 +118,15 @@
         <li><a href="#lrureplacer">LRUReplacer</a></li>
         <li><a href="#bufferpoolmanager">BufferPoolManager</a></li>
         <li><a href="#parallelbufferpoolmanager">ParallelBufferPoolManager</a></li>
+        <li><a href="#得分情况与优化">得分情况与优化</a></li>
+      </ul>
+    </li>
+    <li><a href="#project-2">Project 2</a>
+      <ul>
+        <li><a href="#参考资料">参考资料</a></li>
+        <li><a href="#组织结构说明">组织结构说明</a></li>
+        <li><a href="#易错点">易错点</a></li>
+        <li><a href="#神奇的位运算">神奇的位运算</a></li>
         <li><a href="#得分情况">得分情况</a></li>
       </ul>
     </li>
@@ -127,19 +136,19 @@
 <h2 id="project-1">Project 1</h2>
 </blockquote>
 <h3 id="lrureplacer">LRUReplacer</h3>
-<p>  <strong>理解Pin与Unpin</strong>: 参考《数据库系统概念》，当有线程在读取一个Page时，这个Page是不能被淘汰的，因此需要Pin操作将它移出LRUReplacer。同时Page类中会有计数器记录有几个线程正在读取它的内容，当计数器降为0时，用Unpin操作将其添加进LRUReplacer。          <br>
+<p>  <strong>理解Pin与Unpin</strong>: 参考《数据库系统概念》，当有线程在读取一个 Page 时，这个 Page 是不能被淘汰的，因此需要Pin操作将它移出 LRUReplacer 。同时 Page 类中会有计数器记录有几个线程正在读取它的内容，当计数器降为 0 时，用 Unpin 操作将其添加进 LRUReplacer 。          <br>
   实现方式是采用<strong>双端队列与哈希表</strong>，思路与<a href="https://taofengliu.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/" target="_blank" rel="noopener noreffer">分布式缓存</a>中的相同。</p>
 <h3 id="bufferpoolmanager">BufferPoolManager</h3>
 <p>  <strong>我的刷盘策略</strong>: 懒刷盘，只有当一个页面被驱逐或者被上层显式调用刷盘时才进行刷盘。           <br>
-  <strong>frame_id和获得页框的方法</strong>: frame_id就是<code>pages_</code>数组的下标，代表一个内存“页框”，用于存放物理页。一开始所有frame_id均在<code>free_list_</code>中，当占用一个frame_id时，将它从<code>free_list_</code>取出，并在<code>page_table_</code>建立映射，注意此时并不将其放入<code>replacer_</code>，因为此时上层调用者会使用返回的Page，<code>pin_count_</code>不为零，只有可以进行驱逐的frame_id才会放入<code>replacer_</code>。当后期<code>free_list_</code>为空时，获得一个新页框的方法是从<code>replacer_</code>中驱逐一个页面，得到它对应的页框，此时应注意对驱逐的页面刷盘。     <br>
+  <strong>frame_id和获得页框的方法</strong>: frame_id 就是<code>pages_</code>数组的下标，代表一个内存“页框”，用于存放物理页。一开始所有frame_id均在<code>free_list_</code>中，当占用一个 frame_id 时，将它从<code>free_list_</code>取出，并在<code>page_table_</code>建立映射，注意此时并不将其放入<code>replacer_</code>，因为此时上层调用者会使用返回的Page，<code>pin_count_</code>不为零，只有可以进行驱逐的frame_id才会放入<code>replacer_</code>。当后期<code>free_list_</code>为空时，获得一个新页框的方法是从<code>replacer_</code>中驱逐一个页面，得到它对应的页框，此时应注意对驱逐的页面刷盘。     <br>
   <strong>易错点</strong>:           <br>
-    1.<code>UnpinPgImp()</code>操作中，<code>page_table_</code>找不到要Unpin的页面时，应当返回true。              <br>
-    2.<code>DeletePgImp()</code>中如果成功删除掉一个页，应该Pin一下对应的frame_id。保证一个frame_id只能出现在<code>free_list_</code>或<code>replacer_</code>中的一个地方，当然也有可能均不出现(此时这个frame_id是正在被使用的，<code>pin_count_</code>大于零，无法被驱逐)。</p>
+    1.<code>UnpinPgImp()</code>操作中，<code>page_table_</code>找不到要Unpin的页面时，应当返回 true 。              <br>
+    2.<code>DeletePgImp()</code>中如果成功删除掉一个页，应该 Pin 一下对应的 frame_id 。保证一个 frame_id 只能出现在<code>free_list_</code>或<code>replacer_</code>中的一个地方，当然也有可能均不出现(此时这个 frame_id 是正在被使用的，<code>pin_count_</code>大于零，无法被驱逐)。</p>
 <h3 id="parallelbufferpoolmanager">ParallelBufferPoolManager</h3>
-<p>  用<code>std::vector&lt;BufferPoolManagerInstance*&gt; bpms_</code>记录管理的BufferPoolManagerInstance，用<code>size_t next_instance_</code>记录下一个页面应当分配在哪一个BufferPoolManagerInstance。注意只有<code>NewPgImp()</code>操作需要加锁，这个ParallelBufferPoolManager就是为了提高并发度的。</p>
-<h3 id="得分情况">得分情况</h3>
-<p>  因BufferPoolManager中的易错点一开始只有42分，修改完成后达到满分。    <br>
-        <img
+<p>  用<code>std::vector&lt;BufferPoolManagerInstance*&gt; bpms_</code>记录管理的 BufferPoolManagerInstance ，用<code>size_t next_instance_</code>记录下一个页面应当分配在哪一个 BufferPoolManagerInstance 。注意只有<code>NewPgImp()</code>操作需要加锁，这个 ParallelBufferPoolManager 就是为了提高并发度的。</p>
+<h3 id="得分情况与优化">得分情况与优化</h3>
+<p>  因 BufferPoolManager 中的易错点一开始只有 42 分，修改完成后达到满分，Time 13.01 ，排名 212 。后进行优化，将双向队列中的智能指针改为原始指针，并在<code>FlushPgImp()</code>和<code>FlushAllPgsImp()</code>中将 Page 的<code>is_dirty_</code>设为 false ，避免重复刷盘。优化后 Time 9.63 ，排名 84 。    <br>
+          <img
         class="lazyload"
         src="/svg/loading.min.svg"
         data-src="/cmu445/score1.jpg"
@@ -147,6 +156,105 @@
         data-sizes="auto"
         alt="/cmu445/score1.jpg"
         title="得分" /></p>
+<blockquote>
+<h2 id="project-2">Project 2</h2>
+</blockquote>
+<h3 id="参考资料">参考资料</h3>
+<p>  <a href="http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/3-index/extensible-hashing.html" target="_blank" rel="noopener noreffer">Extendible Hash Table</a>       <br>
+  <a href="https://www.geeksforgeeks.org/extendible-hashing-dynamic-approach-to-dbms/" target="_blank" rel="noopener noreffer">Extendible Hashing (Dynamic approach to DBMS)</a>       <br>
+  <strong>一定要仔细看Project提供的已有代码！</strong></p>
+<h3 id="组织结构说明">组织结构说明</h3>
+<p>  一个Page的大小在<code>config.h</code>中给出，为 4096 byte，那么如何确定<code>BUCKET_ARRAY_SIZE</code>呢？<code>BUCKET_ARRAY_SIZE</code>是一页中可以存放的键值对数，每一个键值对还需要两bit的readable和occupied标志，所以可以通过算式<code>PAGE_SIZE/(sizeof (MappingType) + 0.25)</code>分子分母同乘4得到<code>hash_table_page_defs.h</code>中的<code>#define BUCKET_ARRAY_SIZE (4 * PAGE_SIZE / (4 * sizeof(MappingType) + 1))</code>。       <br>
+  可以注意到<code>Page</code>类中<code>data_</code>的大小就是一个 PAGE_SIZE ，同时也注意到<code>HashTableBucketPage</code>没有构造函数和析构函数并且存放数据的<code>array_</code>长度为零，那如何产生一个<code>HashTableBucketPage</code>对象？在课程官网有提到<code>reinterpret_cast</code>，分配一个<code>HashTableBucketPage</code>对象时调用<code>auto bucket_page = reinterpret_cast&lt;HashTableBucketPage&lt;int, int, IntComparator&gt; *&gt;(bpm-&gt;NewPage(&amp;bucket_page_id, nullptr)-&gt;GetData());</code>，这时会按照<code>Page</code>类中<code>GetData()</code>返回的大小为 PAGE_SIZE 的数据分配内存，然后被<code>HashTableBucketPage</code>指针指向，<code>HashTableBucketPage</code>指针指向的内存大小就是一个 PAGE_SIZE ，因为<code>array_</code>变量在类的尾部声明，就可以使用<code>array_</code>来访问页中数据，即使<code>array_</code>的长度被声明为 0 。<code>HashTableDirectoryPage</code>的内存分配同理。  <br>
+  页中的键值对是以<code>std::pair&lt;KeyType, ValueType&gt;</code>的形式存放的，<code>KeyType</code>是一个模板类，内部是一个长度为<code>KeySize</code>的定长 char 数组。<code>ValueType</code>是<code>Rid</code>类，存放长度为 64 bit 的信息。        <br>
+  当一个键值对加入 bucket 后，如果要删除它，是将它对应的 readable 标志置为 0 ，意味着此时这个位置是一个 tombstone 。       <br>
+  <code>DIRECTORY_ARRAY_SIZE</code>为 512 ，所以<code>GlobalDepth</code>最大为 9 。     <br>
+  <code>HashTableDirectoryPage</code>与<code>ExtendibleHashTable</code>共用一把<code>table_latch_</code>。      <br>
+  截止当前 Project ，可见的项目结构如图：         <br>
+              <img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="/cmu445/act.jpg"
+        data-srcset="/cmu445/act.jpg, /cmu445/act.jpg 1.5x, /cmu445/act.jpg 2x"
+        data-sizes="auto"
+        alt="/cmu445/act.jpg"
+        title="项目结构" /></p>
+<h3 id="易错点">易错点</h3>
+<p>  1.千万记住 Unpin 不再使用的 Page ，包括<code>HashTableDirectoryPage</code>。    <br>
+  2.课程要求使用 least-significant bits 作为 index ，这和很多参考资料上画的是相反的，要注意。   <br>
+  3.我给<code>Insert()</code>加的是读锁，多个线程同时执行<code>Insert()</code>，全部insert到一个满的桶上都会到<code>SplitInsert()</code>扩容，为了避免重复扩容，<code>SplitInsert()</code>先检查是否可以插入成功并且不扩容。至于为什么Insert加读锁，是因为大部分insert操作不改变HashTable的全局状态，加读锁性能明显更好。<code>Merge()</code>同理。      <br>
+  4.桶分裂时当前桶可能存在于<code>bucket_page_ids_</code>中的多个位置，注意全部设成正确的新值。   <br>
+  5.对目录进行 Shrink 之后应该再对所有空桶进行检查是否能合并，因为 Shrink 之后刚刚合并的桶的 SplitBucket 发生了改变，可能继续与空桶合并。</p>
+<h3 id="神奇的位运算">神奇的位运算</h3>
+<p>  <code>HashTableDirectoryPage</code>和<code>HashTableBucketPage</code>中有很多函数用到了几个比较妙的位运算，并且这几个函数对于<code>ExtendibleHashTable</code>中的几个骚操作很有帮助。根据参考材料和课程提供的注释使用这些函数即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">uint32_t</span> <span class="n">HashTableDirectoryPage</span><span class="o">::</span><span class="n">GetSplitImageIndex</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">bucket_idx</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">bucket_idx</span> <span class="o">^</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">local_depths_</span><span class="p">[</span><span class="n">bucket_idx</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">KeyType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">ValueType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">KeyComparator</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">HASH_TABLE_BUCKET_TYPE</span><span class="o">::</span><span class="n">RemoveAt</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">bucket_idx</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">readable_</span><span class="p">[</span><span class="n">bucket_idx</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">bucket_idx</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">KeyType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">ValueType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">KeyComparator</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">HASH_TABLE_BUCKET_TYPE</span><span class="o">::</span><span class="n">IsOccupied</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">bucket_idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">occupied_</span><span class="p">[</span><span class="n">bucket_idx</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">bucket_idx</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">KeyType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">ValueType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">KeyComparator</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">HASH_TABLE_BUCKET_TYPE</span><span class="o">::</span><span class="n">SetOccupied</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">bucket_idx</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">occupied_</span><span class="p">[</span><span class="n">bucket_idx</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">|=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">bucket_idx</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">KeyType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">ValueType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">KeyComparator</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">HASH_TABLE_BUCKET_TYPE</span><span class="o">::</span><span class="n">IsReadable</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">bucket_idx</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">readable_</span><span class="p">[</span><span class="n">bucket_idx</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">bucket_idx</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">KeyType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">ValueType</span><span class="p">,</span> <span class="k">typename</span> <span class="n">KeyComparator</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">HASH_TABLE_BUCKET_TYPE</span><span class="o">::</span><span class="n">SetReadable</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">bucket_idx</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">readable_</span><span class="p">[</span><span class="n">bucket_idx</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">|=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">bucket_idx</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="得分情况">得分情况</h3>
+<p>  一共两次有效提交，第一次因为没有注意到易错点 5 只有 75 分，改正后达到满分，Time 32.96 ，排名 38 ，还算是比较靠前的，有时间再优化一下，很多逻辑都还可以简化，但是重构比较麻烦。</p>
 </div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">

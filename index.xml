@@ -12,7 +12,7 @@
     <pubDate>Thu, 14 Apr 2022 10:28:30 &#43;0800</pubDate>
     <author>作者</author>
     <guid>https://singerpigman.github.io/cmu445/</guid>
-    <description><![CDATA[Project 1 LRUReplacer 理解Pin与Unpin: 参考《数据库系统概念》，当有线程在读取一个Page时，这个Page是不能被淘汰的，因此需要Pin操作将它移出L]]></description>
+    <description><![CDATA[Project 1 LRUReplacer 理解Pin与Unpin: 参考《数据库系统概念》，当有线程在读取一个 Page 时，这个 Page 是不能被淘汰的，因此需要Pin操作将它移出 LRUReplacer 。同时 Page 类中]]></description>
 </item><item>
     <title>6.824关键问题记录</title>
     <link>https://singerpigman.github.io/6.824%E5%85%B3%E9%94%AE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</link>
