@@ -29,7 +29,7 @@
 &emsp;&emsp;```DIRECTORY_ARRAY_SIZE```为 512 ，所以```GlobalDepth```最大为 9 。        
 &emsp;&emsp;```HashTableDirectoryPage```与```ExtendibleHashTable```共用一把```table_latch_```。         
 &emsp;&emsp;截止当前 Project ，可见的项目结构如图：            
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;![项目结构](/cmu445/act.jpg)          
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;![项目结构](/cmu445/act.jpg)          
 ### 易错点         
 &emsp;&emsp;1.千万记住 Unpin 不再使用的 Page ，包括```HashTableDirectoryPage```。       
 &emsp;&emsp;2.课程要求使用 least-significant bits 作为 index ，这和很多参考资料上画的是相反的，要注意。      
@@ -246,4 +246,39 @@ bool HashJoinExecutor::Next(Tuple *tuple, RID *rid) {
 ### 得分情况    
 &emsp;&emsp;这个 Project 的线上测试因为测试框架的更新导致编译失败，详见[Issue #227](https://github.com/cmu-db/bustub/issues/227#issuecomment-1078992923)。向提交的压缩包中加入 /src/include/storage/page/tmp_tuple_page.h 后即可编译成功。第一次提交因为 Hash Join 超时得到 330 分，修改后达到满分，Time 3.87 ，排名 30 。    
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;![得分](/cmu445/score3.jpg)    
-
+> ## Project 4    
+### 参考资料    
+&emsp;&emsp;《数据库系统概念》    
+&emsp;&emsp;[CMU15-445 数据库实验全满分通过笔记](https://blog.csdn.net/twentyonepilots/article/details/120868216)      
+&emsp;&emsp;[2021 CMU 15-445 实验笔记](https://www.inlighting.org/archives/cmu-15-445-notes/)     
+### 三种隔离级别    
+&emsp;&emsp;READ_UNCOMMITED: 读取不需要获得共享锁，写入需要获得排他锁，用完直接放锁。    
+&emsp;&emsp;READ_COMMITTED: 要解决脏读的问题，解决方案就是读时上读锁，读完解读锁；写时上写锁，但等到commit时才解写锁；读时上读锁，读完解读锁。这样，永远不会读到未commit的数据，因为上面有写锁。    
+&emsp;&emsp;REPEATABLE_READ: 读取和写入均需要锁，需要遵守强两阶段锁规则。    
+### 事务状态     
+&emsp;&emsp;**注意:** Any failed lock operation should lead to an ABORTED transaction state (implicit abort) and throw an exception. The transaction manager would further catch this exception and rollback write operations executed by the transaction.    
+```cpp
+ * Transaction states for 2PL:
+ *     _________________________
+ *    |                         v
+ * GROWING -> SHRINKING -> COMMITTED   ABORTED
+ *    |__________|________________________^
+ *
+ * Transaction states for Non-2PL:
+ *     __________
+ *    |          v
+ * GROWING  -> COMMITTED     ABORTED
+ *    |_________________________^
+ *
+```
+### 加锁解锁逻辑    
+&emsp;&emsp;按照《数据库系统概念》18.1.4 的描述和[2021 CMU 15-445 实验笔记](https://www.inlighting.org/archives/cmu-15-445-notes/)的思路实现即可。下面是课程官网的提示。    
++ ```LockShared(Transaction, RID)```: Transaction txn tries to take a shared lock on record id rid. This should be blocked on waiting and should return true when granted. Return false if transaction is rolled back (aborts).
++ ```LockExclusive(Transaction, RID)```: Transaction txn tries to take an exclusive lock on record id rid. This should be blocked on waiting and should return true when granted. Return false if transaction is rolled back (aborts).
++ ```LockUpgrade(Transaction, RID)```: Transaction txn tries to upgrade a shared to exclusive lock on record id rid. This should be blocked on waiting and should return true when granted. Return false if transaction is rolled back (aborts). This should also abort the transaction and return false if another transaction is already waiting to upgrade their lock.
++ ```Unlock(Transaction, RID)```: Unlock the record identified by the given record id that is held by the transaction.    
+### 得分情况和疑惑    
+&emsp;&emsp;这个 Project 真写麻了，是四个 Project 里最痛苦的，一开始只有 55 分，和死锁预防的有关的测试全部超时，后来在[CMU15-445 数据库实验全满分通过笔记](https://blog.csdn.net/twentyonepilots/article/details/120868216)看到“如果老事务想上锁，队列中如果有只是在等待并没有获得锁的新事务请求，也要abort它。如果老事务请求继续等待，测试就会超时”，但是这个和《数据库系统概念》讲的又不一样了。虽然最后达到了满分，但是很多实现和教材的有冲突并且我的很多代码逻辑并不完善。Project 4 无排名。    
+> ## 总结    
+&emsp;&emsp;简单了解C++加上做完 CMU 15-445 共计 13 天，对数据库底层原理加深了理解，也知道了《数据库系统概念》这一本很好的教材，还需要仔细看看。共计 44 次提交，感谢连续十多天熬夜 debug 的自己。    
+![提交记录](/cmu445/record.jpg)
