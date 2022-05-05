@@ -1,8 +1,8 @@
-# Linux块设备I/O-虚拟文件系统
+# 虚拟文件系统
 
 > ## 虚拟文件系统的作用
 &emsp;&emsp;虚拟文件系统（Virtual Filesystem）也可以称为虚拟文件系统转换（Virtual Filesystem Switch，VFS），是一个内核软件层，用来处理与Unix标准文件系统相关的所有系统调用。通过虚拟文件系统，Linux可以支持多种不同类型的文件系统。对用户调用的每个读、写或其它函数，内核都会通过虚拟文件系统将它们转化成实际文件系统所支持的函数。
-![虚拟文件系统](/posts/Linux块设备IO-虚拟文件系统/vfs.jpg "虚拟文件系统")
+![虚拟文件系统](/posts/虚拟文件系统/vfs.jpg "虚拟文件系统")
 
 &emsp;&emsp;例如，当用户输入以下shell命令：```$ cp /floppy/TEST /temp/test```。其中 /floppy 是MS-DOS磁盘的一个安装点，而 /temp 是一个标准的第二扩展文件系统（Second Extended Filesystem，Ext2）的目录。此时 cp 程序不需要知道 /floppy/TEST 和 /temp/test 分别是什么文件系统类型，它直接与VFS交互便能实现它的功能。
 
