@@ -101,32 +101,36 @@
 <main class="main">
                 <div class="container"><div class="toc" id="toc-auto">
             <h2 class="toc-title">目录</h2>
-            <div class="toc-content" id="toc-content-auto"></div>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">操作系统概述</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/about" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>刘陶峰</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/os/"><i class="far fa-folder fa-fw"></i>操作系统</a></span></div>
             <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-12-03">2021-12-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1226 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
-        </div><div class="details toc" id="toc-static"  kept="">
+        </div><div class="details toc" id="toc-static"  kept="true">
                 <div class="details-summary toc-title">
                     <span>目录</span>
                     <span><i class="details-icon fas fa-angle-right"></i></span>
                 </div>
                 <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
   <ul>
-    <li><a href="#操作系统的简单定义">操作系统的简单定义</a></li>
-    <li><a href="#操作系统的作用">操作系统的作用</a>
+    <li>
       <ul>
-        <li><a href="#硬件资源的管理者">硬件资源的管理者</a></li>
-        <li><a href="#封装底层硬件设备">封装底层硬件设备</a></li>
+        <li><a href="#操作系统的简单定义">操作系统的简单定义</a></li>
+        <li><a href="#操作系统的作用">操作系统的作用</a>
+          <ul>
+            <li><a href="#硬件资源的管理者">硬件资源的管理者</a></li>
+            <li><a href="#封装底层硬件设备">封装底层硬件设备</a></li>
+          </ul>
+        </li>
+        <li><a href="#虚拟化">虚拟化</a>
+          <ul>
+            <li><a href="#虚拟化cpu">虚拟化CPU</a></li>
+            <li><a href="#虚拟化内存">虚拟化内存</a></li>
+          </ul>
+        </li>
+        <li><a href="#持久性">持久性</a></li>
       </ul>
     </li>
-    <li><a href="#虚拟化">虚拟化</a>
-      <ul>
-        <li><a href="#虚拟化cpu">虚拟化CPU</a></li>
-        <li><a href="#虚拟化内存">虚拟化内存</a></li>
-      </ul>
-    </li>
-    <li><a href="#持久性">持久性</a></li>
   </ul>
 </nav></div>
             </div><div class="content" id="content"><p>  前几天看面经，看到个问题：“你如何理解操作系统？”，我很难找到一个好的切入点来分析，所以在这里整理一下对操作系统的理解，以加深记忆，形成大局观。</p>
