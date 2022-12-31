@@ -1,0 +1,8 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>计算机网络 - 分类 - 刘陶峰的博客</title>
+        <link>https://singerpigman.github.io/categories/cn/</link>
+        <description>计算机网络 - 分类 - 刘陶峰的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>taofengliu@outlook.com (刘陶峰)</managingEditor>
+            <webMaster>taofengliu@outlook.com (刘陶峰)</webMaster><atom:link href="https://singerpigman.github.io/categories/cn/" rel="self" type="application/rss+xml" /></channel>
+</rss>

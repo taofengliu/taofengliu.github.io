@@ -1,0 +1,29 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>操作系统 - 分类 - 刘陶峰的博客</title>
+        <link>https://singerpigman.github.io/categories/os/</link>
+        <description>操作系统 - 分类 - 刘陶峰的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>taofengliu@outlook.com (刘陶峰)</managingEditor>
+            <webMaster>taofengliu@outlook.com (刘陶峰)</webMaster><lastBuildDate>Sun, 02 Jan 2022 22:14:23 &#43;0800</lastBuildDate><atom:link href="https://singerpigman.github.io/categories/os/" rel="self" type="application/rss+xml" /><item>
+    <title>虚拟文件系统</title>
+    <link>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link>
+    <pubDate>Sun, 02 Jan 2022 22:14:23 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</guid>
+    <description><![CDATA[虚拟文件系统的作用 虚拟文件系统（Virtual Filesystem）也可以称为虚拟文件系统转换（Virtual Filesystem Switch，VFS），是一]]></description>
+</item><item>
+    <title>Linux块设备I/O</title>
+    <link>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/</link>
+    <pubDate>Sun, 02 Jan 2022 00:41:06 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/</guid>
+    <description><![CDATA[在我的一篇博客 操作系统概述 中我画了一张关于Linux的块设备I/O分层的示意图，就是下面这张图。这里再写篇整理一下这张图涉及到的知识点，尽量]]></description>
+</item><item>
+    <title>操作系统概述</title>
+    <link>https://singerpigman.github.io/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</link>
+    <pubDate>Fri, 03 Dec 2021 18:25:36 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</guid>
+    <description><![CDATA[前几天看面经，看到个问题：“你如何理解操作系统？”，我很难找到一个好的切入点来分析，所以在这里整理一下对操作系统的理解，以加深记忆，形成大局]]></description>
+</item></channel>
+</rss>

@@ -1,0 +1,64 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>所有文章 - 刘陶峰的博客</title>
+        <link>https://singerpigman.github.io/posts/</link>
+        <description>所有文章 | 刘陶峰的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>taofengliu@outlook.com (刘陶峰)</managingEditor>
+            <webMaster>taofengliu@outlook.com (刘陶峰)</webMaster><lastBuildDate>Sat, 31 Dec 2022 17:07:37 &#43;0800</lastBuildDate><atom:link href="https://singerpigman.github.io/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>2022年度总结</title>
+    <link>https://singerpigman.github.io/2022/</link>
+    <pubDate>Sat, 31 Dec 2022 17:07:37 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/2022/</guid>
+    <description><![CDATA[虽然我看了多位学长/同学的年度总结感触很深，但是没有打算自己也写一篇，敌不过朝阳再三催促，于是就有了这篇流水账。 2022年我去了很多地方，有]]></description>
+</item><item>
+    <title>CMU-15-445</title>
+    <link>https://singerpigman.github.io/cmu445/</link>
+    <pubDate>Thu, 14 Apr 2022 22:14:23 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/cmu445/</guid>
+    <description><![CDATA[CMU-15-445 Project 1 LRUReplacer 理解Pin与Unpin: 参考《数据库系统概念》，当有线程在读取一个 Page 时，这个 Page 是不能被淘汰的，因此需要Pin操作将它移出 LRUReplacer 。同时 Page 类]]></description>
+</item><item>
+    <title>虚拟文件系统</title>
+    <link>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link>
+    <pubDate>Sun, 02 Jan 2022 22:14:23 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</guid>
+    <description><![CDATA[虚拟文件系统的作用 虚拟文件系统（Virtual Filesystem）也可以称为虚拟文件系统转换（Virtual Filesystem Switch，VFS），是一]]></description>
+</item><item>
+    <title>Linux块设备I/O</title>
+    <link>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/</link>
+    <pubDate>Sun, 02 Jan 2022 00:41:06 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/</guid>
+    <description><![CDATA[在我的一篇博客 操作系统概述 中我画了一张关于Linux的块设备I/O分层的示意图，就是下面这张图。这里再写篇整理一下这张图涉及到的知识点，尽量]]></description>
+</item><item>
+    <title>分布式缓存</title>
+    <link>https://singerpigman.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</link>
+    <pubDate>Thu, 30 Dec 2021 15:37:50 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/</guid>
+    <description><![CDATA[概述 基本信息 项目地址：https://github.com/taofengliu/cache 这是一个纯内存的缓存玩具工具，节点用来存储具体数]]></description>
+</item><item>
+    <title>操作系统概述</title>
+    <link>https://singerpigman.github.io/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</link>
+    <pubDate>Fri, 03 Dec 2021 18:25:36 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/</guid>
+    <description><![CDATA[前几天看面经，看到个问题：“你如何理解操作系统？”，我很难找到一个好的切入点来分析，所以在这里整理一下对操作系统的理解，以加深记忆，形成大局]]></description>
+</item><item>
+    <title>二叉树的常规遍历</title>
+    <link>https://singerpigman.github.io/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86/</link>
+    <pubDate>Wed, 01 Dec 2021 13:20:15 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86/</guid>
+    <description><![CDATA[先序遍历 递归实现 1 2 3 4 5 6 7 8 9 10 11 12 13 14 class Solution { private List&lt;Integer&gt; ans; public List&lt;Integer&gt; preorderTraversal(TreeNode root) { ans = new ArrayList&lt;&gt;(); preOrderRecur(root); return ans; } private void preOrderRecur(TreeNode root){ if(root == null) return; ans.add(root.val); preOrderRecur(root.left); preOrderRecur(root.right); } } 非递归实现（栈） 先将root节点]]></description>
+</item><item>
+    <title>InnoDB中的锁</title>
+    <link>https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/</link>
+    <pubDate>Sun, 07 Nov 2021 00:05:35 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/</guid>
+    <description><![CDATA[InnoDB有哪些锁？ 行锁 InnoDB存储引擎中有如下两种行锁： 共享锁(S Lock) 排他锁(X Lock) 其相互兼容性如下表所示： X S X 不兼容 不兼容 S 不兼容 兼]]></description>
+</item></channel>
+</rss>

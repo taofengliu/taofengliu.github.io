@@ -1,0 +1,22 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Linux内核 - 标签 - 刘陶峰的博客</title>
+        <link>https://singerpigman.github.io/tags/linux%E5%86%85%E6%A0%B8/</link>
+        <description>Linux内核 - 标签 - 刘陶峰的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>taofengliu@outlook.com (刘陶峰)</managingEditor>
+            <webMaster>taofengliu@outlook.com (刘陶峰)</webMaster><lastBuildDate>Sun, 02 Jan 2022 22:14:23 &#43;0800</lastBuildDate><atom:link href="https://singerpigman.github.io/tags/linux%E5%86%85%E6%A0%B8/" rel="self" type="application/rss+xml" /><item>
+    <title>虚拟文件系统</title>
+    <link>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link>
+    <pubDate>Sun, 02 Jan 2022 22:14:23 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io-%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</guid>
+    <description><![CDATA[虚拟文件系统的作用 虚拟文件系统（Virtual Filesystem）也可以称为虚拟文件系统转换（Virtual Filesystem Switch，VFS），是一]]></description>
+</item><item>
+    <title>Linux块设备I/O</title>
+    <link>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/</link>
+    <pubDate>Sun, 02 Jan 2022 00:41:06 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/linux%E5%9D%97%E8%AE%BE%E5%A4%87io/</guid>
+    <description><![CDATA[在我的一篇博客 操作系统概述 中我画了一张关于Linux的块设备I/O分层的示意图，就是下面这张图。这里再写篇整理一下这张图涉及到的知识点，尽量]]></description>
+</item></channel>
+</rss>

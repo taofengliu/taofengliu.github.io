@@ -1,0 +1,22 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>数据库 - 分类 - 刘陶峰的博客</title>
+        <link>https://singerpigman.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+        <description>数据库 - 分类 - 刘陶峰的博客</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>taofengliu@outlook.com (刘陶峰)</managingEditor>
+            <webMaster>taofengliu@outlook.com (刘陶峰)</webMaster><lastBuildDate>Thu, 14 Apr 2022 22:14:23 &#43;0800</lastBuildDate><atom:link href="https://singerpigman.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="self" type="application/rss+xml" /><item>
+    <title>CMU-15-445</title>
+    <link>https://singerpigman.github.io/cmu445/</link>
+    <pubDate>Thu, 14 Apr 2022 22:14:23 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/cmu445/</guid>
+    <description><![CDATA[CMU-15-445 Project 1 LRUReplacer 理解Pin与Unpin: 参考《数据库系统概念》，当有线程在读取一个 Page 时，这个 Page 是不能被淘汰的，因此需要Pin操作将它移出 LRUReplacer 。同时 Page 类]]></description>
+</item><item>
+    <title>InnoDB中的锁</title>
+    <link>https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/</link>
+    <pubDate>Sun, 07 Nov 2021 00:05:35 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/</guid>
+    <description><![CDATA[InnoDB有哪些锁？ 行锁 InnoDB存储引擎中有如下两种行锁： 共享锁(S Lock) 排他锁(X Lock) 其相互兼容性如下表所示： X S X 不兼容 不兼容 S 不兼容 兼]]></description>
+</item></channel>
+</rss>

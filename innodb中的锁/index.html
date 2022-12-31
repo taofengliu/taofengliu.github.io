@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>InnoDB中的锁 - 刘陶峰的博客</title><meta name="Description" content="InnoDB中的锁"><meta property="og:title" content="InnoDB中的锁" />
+<meta property="og:description" content="InnoDB中的锁" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/" /><meta property="og:image" content="https://singerpigman.github.io/logo.svg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-11-07T00:05:35+08:00" />
+<meta property="article:modified_time" content="2021-11-07T00:05:35+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://singerpigman.github.io/logo.svg"/>
+
+<meta name="twitter:title" content="InnoDB中的锁"/>
+<meta name="twitter:description" content="InnoDB中的锁"/>
+<meta name="application-name" content="刘陶峰的博客">
+<meta name="apple-mobile-web-app-title" content="刘陶峰的博客"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/logo.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/" /><link rel="next" href="https://singerpigman.github.io/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "InnoDB中的锁",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/singerpigman.github.io\/innodb%E4%B8%AD%E7%9A%84%E9%94%81\/"
+        },"genre": "posts","keywords": "MySQL","wordcount":  2271 ,
+        "url": "https:\/\/singerpigman.github.io\/innodb%E4%B8%AD%E7%9A%84%E9%94%81\/","datePublished": "2021-11-07T00:05:35+08:00","dateModified": "2021-11-07T00:05:35+08:00","publisher": {
+            "@type": "Organization",
+            "name": "刘陶峰","logo": "https:\/\/singerpigman.github.io\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "刘陶峰"
+            },"description": "InnoDB中的锁"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="刘陶峰的博客">刘陶峰的博客</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/about/"> 关于我 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="刘陶峰的博客">刘陶峰的博客</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/about/" title="">关于我</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">InnoDB中的锁</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/about" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>刘陶峰</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"><i class="far fa-folder fa-fw"></i>数据库</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-11-07">2021-11-07</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2271 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#innodb有哪些锁">InnoDB有哪些锁？</a>
+      <ul>
+        <li><a href="#行锁">行锁</a></li>
+        <li><a href="#意向锁">意向锁</a></li>
+      </ul>
+    </li>
+    <li><a href="#行锁-1">行锁</a>
+      <ul>
+        <li><a href="#行锁算法">行锁算法</a></li>
+        <li><a href="#解决幻像phantom-problem问题">解决幻像(Phantom Problem)问题</a></li>
+        <li><a href="#存储引擎层面进行的锁的优化">存储引擎层面进行的锁的优化</a>
+          <ul>
+            <li><a href="#锁降级">锁降级</a></li>
+            <li><a href="#锁升级">锁升级</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#意向锁有什么用">意向锁有什么用</a></li>
+    <li><a href="#解决死锁问题">解决死锁问题</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<h2 id="innodb有哪些锁">InnoDB有哪些锁？</h2>
+</blockquote>
+<h3 id="行锁">行锁</h3>
+<p>  InnoDB存储引擎中有如下两种行锁：</p>
+<ul>
+<li>共享锁(S Lock)</li>
+<li>排他锁(X Lock)</li>
+</ul>
+<p>  其相互兼容性如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>X</th>
+<th>S</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>S</td>
+<td>不兼容</td>
+<td>兼容</td>
+</tr>
+</tbody>
+</table>
+<h3 id="意向锁">意向锁</h3>
+<p>  InnoDB存储引擎支持多粒度锁定，这种锁定允许事务在行级上的锁与表级上的锁同时存在。为了支持在不同粒度上的锁定，InnoDB引入了意向锁(Intention Lock)。意向锁将锁定对象分为多个层次，若希望在细粒度层次上加锁(行锁)，则需要先在粗粒度上加锁(意向锁)，可将意向锁理解为表级别的锁。  <br>
+  InnoDB中有两种意向锁：</p>
+<ul>
+<li>意向共享锁(IS Lock)</li>
+<li>意向排他锁(IX Lock)</li>
+</ul>
+<p>  其兼容性如下(表中的S和X为表级别的共享、排他锁)：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>IS</th>
+<th>IX</th>
+<th>S</th>
+<th>X</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IS</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>IX</td>
+<td>兼容</td>
+<td>兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>S</td>
+<td>兼容</td>
+<td>不兼容</td>
+<td>兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>X</td>
+<td>不兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h2 id="行锁-1">行锁</h2>
+</blockquote>
+<h3 id="行锁算法">行锁算法</h3>
+<p>  InnoDB中有三种行锁算法：</p>
+<ul>
+<li>Record Lock：单个行记录上的锁</li>
+<li>Gap Lock：间隙锁，锁定一个范围，但是不包括行记录本身</li>
+<li>Next-Key Lock：Gap Lock + Record Lock</li>
+</ul>
+<h3 id="解决幻像phantom-problem问题">解决幻像(Phantom Problem)问题</h3>
+<p>  幻像问题(Phantom Problem)在MySQL官方文档中给出了定义：<em><strong>The so-called phantom problem occurs within a transaction when the same query produces different sets of rows at different times.</strong></em>。大致意思是：<em><strong>当同一条查询在不同的时间产生不同的结果集，所谓的Phantom Problem就会在事务中发生</strong></em>。例如事务A按照一定搜索条件进行数据读取，期间事务B插入(删除)或更改了相同搜索条件的数据，事务A再次按照原先条件进行读取时，发现与第一次读取的结果出现了不同，好像出现了幻觉(Phantom)。在很多书中又给出了两个名词，分别是幻读(Phantom Read)和不可重复读(Nonrepeatable Read)。解释为：不可重复读指事务B Update数据造成的问题，幻读指事务B Insert或Delete数据造成的问题，这两者的定义也均与<em><strong>维基百科</strong></em>中的一致。这里的“幻读”其实和官方文档中的幻行(Phantom Row)问题是一样的，在官方文档中有这句话：<em><strong>If a [SELECT] is executed twice, but returns a row the second time that was not returned the first time, the row is a “phantom” row</strong></em>。在解决了幻像问题的Repeatable Read级别下，使用Next-Key Lock：Gap Lock + Record Lock来锁定读取到的数据行及其检索范围。 <br>
+  <strong>这里注意，进行“一致性非锁定读”(快照读)时均使用“多版本并发控制(MVCC)”来避免幻像问题，在“一致性锁定读”(当前读)的情况下才会使用锁算法来避免此问题。</strong></p>
+<h3 id="存储引擎层面进行的锁的优化">存储引擎层面进行的锁的优化</h3>
+<h4 id="锁降级">锁降级</h4>
+<p>  当查询的索引具有唯一属性时，InnoDB会对Next-Key Lock进行优化，将其降级为Record Lock，即锁住索引本身，而不是范围。这里举个例子，首先创建表:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="w">    </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>  接下来执行表中的语句:</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>会话A</th>
+<th>会话B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>BEGIN;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>SELECT * FROM t WHERE a=5 FOR UPDATE;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td><code>BEGIN;</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td><code>INSERT INTO t SELECT 4;</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td></td>
+<td><code>COMMIT;</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>COMMIT;</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>  由于a是具有唯一属性的索引，在上面的例子中，会话B的<code>COMMIT</code>会直接成功，不需要阻塞。这种锁降级会大大提高数据库的并发性。如果查询的索引不具有唯一属性，则会对该索引加Next-Key Lock，但是对应的聚簇索引依旧为Record Lock。为了说明这一点，我们再创建一个表:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="w">    </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="n">b</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="k">KEY</span><span class="p">(</span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>  接着执行下面的SQL语句:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>  此时则会对索引b加一个Next-key Lock，其范围是(1,6),对索引a加一个Record Lock，加在了a=5的记录上。因此，下面的SQL语句都会被阻塞：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">5</span><span class="w"> </span><span class="k">LOCK</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SHARE</span><span class="w"> </span><span class="k">MODE</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="锁升级">锁升级</h4>
+<p>  维护锁信息是一个占用内存的操作，为了避免锁信息占用过多内存，在Microsoft SQL Server中有锁升级的策略，即在必要的时候将行锁升级为页锁，或将页锁升级为表锁。然而，<em><strong>InnoDB存储引擎不存在锁升级的情况</strong></em>，这得益于InnoDB采用位图的方式记录每个数据页的锁信息，占用内存极少。</p>
+<blockquote>
+<h2 id="意向锁有什么用">意向锁有什么用</h2>
+</blockquote>
+<p>  直接看例子：事务A锁住了表中的一行，让这一行只能读，不能写。之后，事务B申请整个表的写锁。如果事务B申请成功，那么理论上它就能修改表中的任意一行，这与A持有的行锁是冲突的。事务B申请表锁的时候，需要确认表中的所有行都没有被上锁，这时候如果没有意向锁，则需要遍历每一行，很费时间。如果事务A在加行锁前对表加上意向锁，事务B只需判断是否有意向锁来决定是否阻塞，效率明显提高。      <br>
+  总结一下就是：意向锁是一种快速判断表锁是否与之前可能存在的行锁冲突的机制。</p>
+<blockquote>
+<h2 id="解决死锁问题">解决死锁问题</h2>
+</blockquote>
+<p>  死锁是指两个以上的事务在执行过程中，因争夺锁而造成的一种互相等待的现象。  <br>
+  解决死锁问题最简单的方法是超时机制，即两个事务互相等待时，当一个事务等待的时间超过了设置的阈值，便对其进行回滚，使另一个事务得以进行。参数innodb_lock_wait_timeout可以用来设置超时时间。这里就涉及到另外一个参数：innodb_rollback_on_timeout，该参数的决定了当前请求锁超时之后回滚的是整个事物还是仅当前语句，默认值是off，即回滚当前语句。      <br>
+  还有另一种方式便是等待图(wait-for graph)。在等待图中，事务为图中的节点，节点T1指向节点T2定义为：事务T1在等待事务T2占用的资源；或者是：事务T1与事务T2等待相同的资源，而事务T1发生在事务T2后面。可以想到，若图中存在回路，即可认为存在死锁，此时InnoDB会在回路中选择回滚量最小的事务进行回滚。innodb_deadlock_detect参数可以开启或关闭这种检测方法。</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-11-07</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/mysql/">MySQL</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86/" class="next" rel="next" title="二叉树的常规遍历">二叉树的常规遍历<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/about" target="_blank">刘陶峰</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

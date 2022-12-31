@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>二叉树的常规遍历 - 刘陶峰的博客</title><meta name="Description" content="二叉树的常规遍历"><meta property="og:title" content="二叉树的常规遍历" />
+<meta property="og:description" content="二叉树的常规遍历" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://singerpigman.github.io/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86/" /><meta property="og:image" content="https://singerpigman.github.io/logo.svg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-12-01T13:20:15+08:00" />
+<meta property="article:modified_time" content="2021-12-01T13:20:15+08:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://singerpigman.github.io/logo.svg"/>
+
+<meta name="twitter:title" content="二叉树的常规遍历"/>
+<meta name="twitter:description" content="二叉树的常规遍历"/>
+<meta name="application-name" content="刘陶峰的博客">
+<meta name="apple-mobile-web-app-title" content="刘陶峰的博客"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="/logo.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://singerpigman.github.io/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86/" /><link rel="prev" href="https://singerpigman.github.io/innodb%E4%B8%AD%E7%9A%84%E9%94%81/" /><link rel="next" href="https://singerpigman.github.io/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "二叉树的常规遍历",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/singerpigman.github.io\/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86\/"
+        },"genre": "posts","keywords": "树","wordcount":  1473 ,
+        "url": "https:\/\/singerpigman.github.io\/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B8%B8%E8%A7%84%E9%81%8D%E5%8E%86\/","datePublished": "2021-12-01T13:20:15+08:00","dateModified": "2021-12-01T13:20:15+08:00","publisher": {
+            "@type": "Organization",
+            "name": "刘陶峰","logo": "https:\/\/singerpigman.github.io\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "刘陶峰"
+            },"description": "二叉树的常规遍历"
+    }
+    </script></head>
+    <body header-desktop="fixed" header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="刘陶峰的博客">刘陶峰的博客</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 文章 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/about/"> 关于我 </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章" id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="刘陶峰的博客">刘陶峰的博客</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章" id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">文章</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/about/" title="">关于我</a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">二叉树的常规遍历</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/about" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>刘陶峰</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"><i class="far fa-folder fa-fw"></i>数据结构与算法</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-12-01">2021-12-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1473 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="true">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#先序遍历">先序遍历</a>
+      <ul>
+        <li><a href="#递归实现">递归实现</a></li>
+        <li><a href="#非递归实现栈">非递归实现（栈）</a></li>
+      </ul>
+    </li>
+    <li><a href="#中序遍历">中序遍历</a>
+      <ul>
+        <li><a href="#递归实现-1">递归实现</a></li>
+        <li><a href="#非递归实现栈-1">非递归实现（栈）</a></li>
+      </ul>
+    </li>
+    <li><a href="#后序遍历">后序遍历</a>
+      <ul>
+        <li><a href="#递归实现-2">递归实现</a></li>
+        <li><a href="#非递归实现栈-2">非递归实现（栈）</a></li>
+      </ul>
+    </li>
+    <li><a href="#层序遍历">层序遍历</a></li>
+    <li><a href="#zigzag遍历锯齿形层序遍历">ZigZag遍历（锯齿形层序遍历）</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<h2 id="先序遍历">先序遍历</h2>
+</blockquote>
+<h3 id="递归实现">递归实现</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">preorderTraversal</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">preOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">preOrderRecur</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">preOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">preOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="非递归实现栈">非递归实现（栈）</h3>
+<p>  先将root节点压如栈中，之后反复执行：从栈中弹出一个元素，计入遍历结果，将其右节点、左节点分别压入栈中。直到栈为空。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">preorderTraversal</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(!</span><span class="n">stack</span><span class="o">.</span><span class="na">empty</span><span class="o">()){</span>
+</span></span><span class="line"><span class="cl">            <span class="n">root</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<h2 id="中序遍历">中序遍历</h2>
+</blockquote>
+<h3 id="递归实现-1">递归实现</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">inorderTraversal</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">inOrderRecur</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">inOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="非递归实现栈-1">非递归实现（栈）</h3>
+<ol>
+<li>申请一个新的栈，记为stack。初始时，令变量cur=root。</li>
+<li>先把cur节点压入栈中，对以cur节点为头的整棵子树来说，依次把左边界压入栈中。即不停地令cur=cur.left，然后重复步骤2。</li>
+<li>不断重复步骤2，直到发现cur为空，此时从stack中弹出一个节点，记为node。将node加入遍历结果，并让cur=node.right，然后重复步骤2。</li>
+<li>当stack为空且cur为空时，遍历结束。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">inorderTraversal</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(!</span><span class="n">stack</span><span class="o">.</span><span class="na">empty</span><span class="o">()</span> <span class="o">||</span> <span class="n">root</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">root</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">root</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">root</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<h2 id="后序遍历">后序遍历</h2>
+</blockquote>
+<h3 id="递归实现-2">递归实现</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">postorderTraversal</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">posOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">posOrderRecur</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">posOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">posOrderRecur</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="非递归实现栈-2">非递归实现（栈）</h3>
+<ol>
+<li>申请一个栈，记为s1，然后将根节点root压入s1中。</li>
+<li>将s1中弹出的节点记为cur，将cur的左右孩子节点依次压入s1中。</li>
+<li>在整个过程中，每个从s1弹出的节点，都将其压入s2中。</li>
+<li>不断重复步骤2和步骤3，直到s1为空。</li>
+<li>将s2中的所有节点弹出，其顺序即为后序遍历。</li>
+</ol>
+<p>  <strong>整体思想其实就是：进入s1中的顺序为“根-&gt;左-&gt;右”，出s1的顺序（即进入s2的顺序）为“根-&gt;右-&gt;左”，再用s2将其反转，便成了“左-&gt;右-&gt;根”。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">postorderTraversal</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">s1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">s2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">s1</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(!</span><span class="n">s1</span><span class="o">.</span><span class="na">empty</span><span class="o">()){</span>
+</span></span><span class="line"><span class="cl">            <span class="n">root</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">s2</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">s1</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">s1</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(!</span><span class="n">s2</span><span class="o">.</span><span class="na">empty</span><span class="o">()){</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">s2</span><span class="o">.</span><span class="na">pop</span><span class="o">().</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<h2 id="层序遍历">层序遍历</h2>
+</blockquote>
+<ol>
+<li>申请一个双端队列list，将根节点加入list中。变量last为当前遍历的层的最后一个节点，nLast为下一层的最后一个节点。队列row为当前层中的元素，当前层遍历结束后将其加入遍历结果ans中。</li>
+<li>取list的第一个节点记为cur，将其值加入row中，再将其左右孩子节点依次加入list尾端，并维护nLast为下一层的最右节点。</li>
+<li>当cur等于last时，表明该换行了，令last=nLast，将row加入ans中。</li>
+<li>重复步骤2、3直到list为空。</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">levelOrder</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">row</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">list</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TreeNode</span> <span class="n">cur</span> <span class="o">=</span> <span class="kc">null</span><span class="o">,</span> <span class="n">last</span> <span class="o">=</span> <span class="n">root</span><span class="o">,</span> <span class="n">nLast</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(!</span><span class="n">list</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+</span></span><span class="line"><span class="cl">            <span class="n">cur</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">row</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nLast</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nLast</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">cur</span> <span class="o">==</span> <span class="n">last</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">row</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">row</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">last</span> <span class="o">=</span> <span class="n">nLast</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<h2 id="zigzag遍历锯齿形层序遍历">ZigZag遍历（锯齿形层序遍历）</h2>
+</blockquote>
+<p>  类似于层序遍历，需添加一个变量记录当前层是从左至右遍历还是从右至左遍历，并且nLast维护方式改变，具体见代码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="nf">zigzagLevelOrder</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">row</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TreeNode</span> <span class="n">last</span> <span class="o">=</span> <span class="n">root</span><span class="o">,</span> <span class="n">nLast</span> <span class="o">=</span> <span class="kc">null</span><span class="o">,</span> <span class="n">cur</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">boolean</span> <span class="n">ltor</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span><span class="c1">//第一层为从左至右遍历
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">list</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">ltor</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">row</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span><span class="o">(</span><span class="n">nLast</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">nLast</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span><span class="o">(</span><span class="n">nLast</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">nLast</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">pollLast</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">                <span class="n">row</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">addFirst</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span><span class="o">(</span><span class="n">nLast</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">nLast</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">list</span><span class="o">.</span><span class="na">addFirst</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span><span class="o">(</span><span class="n">nLast</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">nLast</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="n">cur</span> <span class="o">==</span> <span class="n">last</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">                <span class="n">last</span> <span class="o">=</span> <span class="n">nLast</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nLast</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ltor</span> <span class="o">=</span> <span class="o">!</span><span class="n">ltor</span><span class="o">;</span><span class="c1">//下一层与当前层遍历顺序相反
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">row</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">row</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2021-12-01</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw"></i>&nbsp;<a href="/tags/%E6%A0%91/">树</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/innodb%E4%B8%AD%E7%9A%84%E9%94%81/" class="prev" rel="prev" title="InnoDB中的锁"><i class="fas fa-angle-left fa-fw"></i>InnoDB中的锁</a>
+            <a href="/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" class="next" rel="next" title="操作系统概述">操作系统概述<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2021 - 2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/about" target="_blank">刘陶峰</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/katex/copy-tex.min.css"><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/autocomplete/autocomplete.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.stemmer.support.min.js"></script><script type="text/javascript" src="/lib/lunr/lunr.zh.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/katex/katex.min.js"></script><script type="text/javascript" src="/lib/katex/auto-render.min.js"></script><script type="text/javascript" src="/lib/katex/copy-tex.min.js"></script><script type="text/javascript" src="/lib/katex/mhchem.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":100},"comment":{},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
